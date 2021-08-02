@@ -2,10 +2,11 @@
 title: "Lab 4"
 author: "Fernando Meza"
 date: "7/22/2021"
+# Tesselatons, Spatial Joins, PIPs
 output: html_document
 ---
 
-```{r setup, indlude = FALSE}
+```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
@@ -21,7 +22,6 @@ library(readxl)
 ```
 
 ```{r}
-#Question 1
 counties <- USAboundaries::us_counties() %>%
   filter(!state_name %in% c("Hawaii", "Puerto Rico", "Alaska",
                             "Guam")) %>%
@@ -36,7 +36,7 @@ cent_union
 ```
   
   
-```{r warning = FALSE}
+```{r}
   
 boundary <- counties %>% st_union() %>% st_cast()
 
@@ -71,7 +71,6 @@ plot_now(hex_grid, title = "Hexagonal Grid Coverage")
 
 
 ```{R}
-#Q2
 Tesselated_Surfaces = function(data, description)
 {
   area = st_area(data), area = set_units(area), area = as.numeric(area)
@@ -89,7 +88,7 @@ tesselation_sum(hex, "Hexagonal")
 knitr/kable(tesselation_summary, caption = "Tesselation Summary"
             col.names = c("Tesselation")
 ```
-#Q3-4
+
 NID2019_U <- read_excel("C:/Users/fmeza/github/geog-176A-labs/data/NID2019_U.xlsx")
 View(NID2019_U)
 
