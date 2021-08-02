@@ -1,0 +1,43 @@
+#Fernando Meza
+#07-07-20201
+#Lab 2 GEOG13
+
+#Packages
+library(tidyverse)
+library(knitr)
+library(readxl)
+PopEst = read_excel("data/PopulationEstimates.xls", 
+    skip = 2)
+library(zoo)
+
+#Data
+home = readr::read_csv("data/landdata-states.csv")
+rawdata = readr::read_csv("https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv")
+
+#Q1
+rawdata = Table_One %>%
+  filter(state == "California") %>%
+  filter(date == max(date)) %>%
+  summarize(total_cases = sum(cases)) %>%
+  group_by(state, county) %>%
+  ungroup() %>%
+  slice_max(diff, n = 5)
+  
+  knitr::kable(table_one
+  caption = "5 California counties with the most cumulative cases"
+  col.names= c("county", "cases"))
+
+rawdata = Table_Two %>%
+  filter(state == "California") %>%
+  group_by(state)
+  filter(date == max(date) +14)
+  summarize(min_cases = min(cases), max_cases = max(cases)) %>%
+  mutate(difference = max_cases - min_cases) %>%
+  ungroup()
+  slice_max(diff, n = 5)
+  
+    knitr::kable(table_two
+  caption = "5 California counties with the most new cases"
+  col.names= c("county", "cases"))
+  
+  PopEst %>%

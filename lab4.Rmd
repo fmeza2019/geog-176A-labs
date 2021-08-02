@@ -1,0 +1,111 @@
+---
+title: "Lab 4"
+author: "Fernando Meza"
+date: "7/22/2021"
+output: html_document
+---
+
+```{r setup, indlude = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(dplyr)
+library(sf)
+library(USAboundaries)
+library(knitr)
+library(gghighlight)
+library(ggplot2)
+library(leaflet)
+library(readxl)
+
+```
+
+```{r}
+#Question 1
+counties <- USAboundaries::us_counties() %>%
+  filter(!state_name %in% c("Hawaii", "Puerto Rico", "Alaska",
+                            "Guam")) %>%
+  st_transform(5070) %>% st_as_sf()
+
+centroids <- counties %>% st_centroid()
+nrow(centroids)
+
+cent_union <- centroids %>% st_union()
+cent_union
+
+```
+  
+  
+```{r warning = FALSE}
+  
+boundary <- counties %>% st_union() %>% st_cast()
+
+voronois <- st_voronoi(cent_union) %>% st_as_sf() %>% mutate(id = 1:n()) %>% st_cast() %>% st_intersection(boundary)
+
+plot(voronois)
+
+
+
+```
+```{R}
+rmapshaper::ms_simplify
+keep(vertices = max_number)
+mapview::npts
+st_intersection(tessellations)
+
+
+
+plot_tess = function(data, description)
+  ggplot() + 
+    geom_sf(data = data, fill = "white", col = "navy", size = .2) +   
+    theme_void() +
+    labs(title = title, caption = paste("This tesselation has:", nrow(data), "tiles" )) +
+    theme(plot.title = element_text(hjust = .5, color =  "navy", face = "bold"))
+
+plot_now(cent_union, title = "Centroids Plot")
+plot_now(voronois, title = "Vronois Tesselation")
+plot_now(triangle, title = "Delauny Triangulation")
+plot_now(gridded, title = "Equal Area Square Coverage")
+plot_now(hex_grid, title = "Hexagonal Grid Coverage")
+```
+
+
+```{R}
+#Q2
+Tesselated_Surfaces = function(data, description)
+{
+  area = st_area(data), area = set_units(area), area = as.numeric(area)
+  data.frame(Values = c(description, mapview::npts(data), mean(area), sd(area, area))
+}
+data = cent_union
+summarize_tess(cent_union, "County Centroids Plot")
+
+tesselation_sum(CONUS, "Original Counties")
+tesselation_sum(voronoi_crop, "Voronoi")
+tesselation_sum(triangulated_crop, "Voronoi")
+tesselation_sum(gridded, "square")
+tesselation_sum(hex, "Hexagonal")
+
+knitr/kable(tesselation_summary, caption = "Tesselation Summary"
+            col.names = c("Tesselation")
+```
+#Q3-4
+NID2019_U <- read_excel("C:/Users/fmeza/github/geog-176A-labs/data/NID2019_U.xlsx")
+View(NID2019_U)
+
+NID2019_U %>%
+filter(!is.na(LONGITUDE)) %>%
+filter(!is.na(LATITUDE)) %>%
+st_as_sf(coords = c("LONGITUDE", "LATITUDE"), crs = 4326) %>%
+st_transform(5070)
+
+PIP <- function(points, polygons, id){
+st_join(polygons, points) %>%
+dplyr::count(.data[['ID']])
+}
+get_dams = function(NID2019_U, "Q3")
+  ggplot() + 
+    geom_sf(data = data, fill = "viridis", col = "NA") +   
+    theme_void() +
+    theme(plot.title = element_text(hjust = .5, color =  "navy", face = "bold"))
+
